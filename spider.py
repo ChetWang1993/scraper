@@ -5,21 +5,16 @@ import pandas as pd
 from pandas import DataFrame
 import json
 
-def get_all_code(d):
-    tagurl = "https://www.hkexnews.hk/sdw/search/stocklist.aspx?sortby=stockcode&shareholdingdate={}".format(d)
+def get_all_code():
+    tagurl = "https://www.hkexnews.hk/ncms/script/eds/activestock_sehk_e.json"
     response = requests.get(tagurl)
-    soup = BeautifulSoup(response.text,"lxml")
-    tr_list = soup.find_all("tr")
-    tr_list = tr_list[2:]
+    html = json.loads(response.text)
     x = []
-    for tr in tr_list:
-        ric = tr.find('td').text.strip()
-        if ric[0] == '0':
+    for row in html:
+        if row['c'][0] == '0':
             continue
-        x.append(ric)
+        x.append(row['c'])
     return x
-
-
 
 def crawler(input_time = '2020/02/01',input_code = '00002',retry = 3):
     if retry<=0:
@@ -61,7 +56,9 @@ def crawler(input_time = '2020/02/01',input_code = '00002',retry = 3):
         'txtParticipantName': '',
         'txtSelPartID': ''
         }
+        print(data)
         response = requests.post('https://www.hkexnews.hk/sdw/search/searchsdw.aspx', headers=headers, data=data)
+        print(response.status_code)
         if response.status_code!=200:
             print("中途出错")
             return []
@@ -77,8 +74,10 @@ def crawler(input_time = '2020/02/01',input_code = '00002',retry = 3):
                 div = td.find("div",attrs={"class":"mobile-list-body"})
                 rowdata.append(div.text.strip())
             returndata.append(rowdata)
+        print(returndata)
         return returndata
     except:
+        print("exception")
         return crawler(input_time,input_code,retry-1)
 import threading
 
@@ -95,17 +94,13 @@ def child_thread(input_time,total_data,code_list):
         data = crawler(input_time,code)
         with threading.Lock():
             for row in data:
-                total_data["Date"].append(input_time)
-                total_data["Ric"].append(code)
+                total_data["时间"].append(input_time)
+                total_data["股票代码"].append(code)
                 total_data["Participant ID"].append(row[0])
                 total_data["Name of CCASS Participant"].append(row[1])
                 total_data["Address"].append(row[2])
                 total_data["ShareHolding"].append(row[3])
-                total_data["Percentage"].append(row[4])
-
-
-
-
+                total_data[r"占已发行股份/认股权证/单位总数的百分比"].append(row[4])
 
 def main():
     import sys
@@ -114,11 +109,13 @@ def main():
         exit()
     d = sys.argv[1]
     input_time = d[:4]+"/"+d[4:6]+"/"+d[6:]
+    print(input_time)
     total_data = {}
-    col_name = ["Date","Ric","Participant ID","Name of CCASS Participant","Address","ShareHolding","Percentage"]
+    col_name = ["时间","股票代码","Participant ID","Name of CCASS Participant","Address","ShareHolding",r"占已发行股份/认股权证/单位总数的百分比"]
     for cl in col_name:
         total_data[cl] = []
-    codelist = get_all_code(d)
+    codelist = get_all_code()
+    codelist = codelist[-500:]
     threads = []
     for i in range(40):
         t = threading.Thread(target=child_thread,args=(input_time,total_data,codelist))
@@ -128,12 +125,9 @@ def main():
         t.join()
     df = pd.DataFrame(total_data)
     cols = list(df)
-    cols.insert(0, cols.pop(cols.index('Ric')))
-    cols.insert(1, cols.pop(cols.index('Date')))
+    cols.insert(0, cols.pop(cols.index('股票代码')))
+    cols.insert(1, cols.pop(cols.index('时间')))
     #df = df.ix[:, cols]
-    df.to_csv('{}.csv'.format(d), index=False)
+    df.to_csv('{}.csv'.format(d), index=False, sep='\t')
 
-
-
-
-main()
+main()                                                                                                                                1,15          Top
