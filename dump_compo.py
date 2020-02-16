@@ -3,7 +3,8 @@
 import pandas as pd
 import datetime
 import sys
-sys.path.append('/Users/apple/Documents/trading/alpha/scripts/')
+root_path= '/root/'
+sys.path.append(root_path + 'scripts/')
 from utils import *
 from jqdatasdk import *
 auth('13918125129','fmttm1993')
@@ -13,8 +14,8 @@ auth('13918125129','fmttm1993')
 def date_str(d):
     return d[:4] + '-' + d[4:6] + '-' + d[6:]
 idx = '000300.XSHG'
-_compo_path = '/root/data/prod/erd/'
-compo_path = '/Users/apple/Documents/trading/alpha/data/compo/'
+compo_path = '/root/data/prod/compo/'
+_compo_path = '/Users/apple/Documents/trading/alpha/data/compo/'
 d = sys.argv[1]
 
 stocks = get_index_stocks(idx, date = date_str(d))

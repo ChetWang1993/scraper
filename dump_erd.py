@@ -20,7 +20,6 @@ e = get_bars(stocks, 1, unit='1d',fields=['date','open','high','low','close','vo
     end_dt = next_bday_from_str(d).strftime('%Y-%m-%d'), df = True)
 if 0 == e.size:
     quit()
-print(e['date'][0])
 if e['date'][0] != datetime.strptime(d, '%Y%m%d').date():
     quit()
 e = e.reset_index()
