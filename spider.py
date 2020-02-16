@@ -1,19 +1,24 @@
+#!/usr/bin/python3
 import requests
 from bs4 import BeautifulSoup
 import time
 import pandas as pd
 from pandas import DataFrame
 import json
+data_path = '/root/data/prod/ccass/'
 
-def get_all_code():
-    tagurl = "https://www.hkexnews.hk/ncms/script/eds/activestock_sehk_e.json"
+def get_all_code(d):
+    tagurl = "https://www.hkexnews.hk/sdw/search/stocklist.aspx?sortby=stockcode&shareholdingdate={}".format(d)
     response = requests.get(tagurl)
-    html = json.loads(response.text)
+    soup = BeautifulSoup(response.text,"lxml")
+    tr_list = soup.find_all("tr")
+    tr_list = tr_list[2:]
     x = []
-    for row in html:
-        if row['c'][0] == '0':
+    for tr in tr_list:
+        ric = tr.find('td').text.strip()
+        if ric[0] == '0':
             continue
-        x.append(row['c'])
+        x.append(ric)
     return x
 
 def crawler(input_time = '2020/02/01',input_code = '00002',retry = 3):
@@ -56,9 +61,7 @@ def crawler(input_time = '2020/02/01',input_code = '00002',retry = 3):
         'txtParticipantName': '',
         'txtSelPartID': ''
         }
-        print(data)
         response = requests.post('https://www.hkexnews.hk/sdw/search/searchsdw.aspx', headers=headers, data=data)
-        print(response.status_code)
         if response.status_code!=200:
             print("中途出错")
             return []
@@ -74,7 +77,6 @@ def crawler(input_time = '2020/02/01',input_code = '00002',retry = 3):
                 div = td.find("div",attrs={"class":"mobile-list-body"})
                 rowdata.append(div.text.strip())
             returndata.append(rowdata)
-        print(returndata)
         return returndata
     except:
         print("exception")
@@ -114,7 +116,7 @@ def main():
     col_name = ["时间","股票代码","Participant ID","Name of CCASS Participant","Address","ShareHolding",r"占已发行股份/认股权证/单位总数的百分比"]
     for cl in col_name:
         total_data[cl] = []
-    codelist = get_all_code()
+    codelist = get_all_code(d)
     codelist = codelist[-500:]
     threads = []
     for i in range(40):
@@ -127,7 +129,6 @@ def main():
     cols = list(df)
     cols.insert(0, cols.pop(cols.index('股票代码')))
     cols.insert(1, cols.pop(cols.index('时间')))
-    #df = df.ix[:, cols]
-    df.to_csv('{}.csv'.format(d), index=False, sep='\t')
+    df.to_csv('{}/{}.csv'.format(data_path, d), index=False, sep='\t')
 
-main()                                                                                                                                1,15          Top
+main()
