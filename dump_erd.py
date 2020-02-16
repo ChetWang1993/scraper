@@ -1,4 +1,5 @@
-#!/usr/local/bin/python3
+#!/usr/bin/python3
+#/usr/local/bin/python3
 import pandas as pd
 import datetime
 import sys
@@ -6,7 +7,6 @@ sys.path.append('/Users/apple/Documents/trading/alpha/scripts/')
 from utils import *
 from jqdatasdk import *
 auth('13918125129','fmttm1993')
-
 def date_str(d):
     return d[:4] + '-' + d[4:6] + '-' + d[6:]
 idx = '000300.XSHG'
