@@ -5,7 +5,7 @@ import time
 import pandas as pd
 from pandas import DataFrame
 import json
-data_path = '/root/data/ccass/'
+data_path = '/root/data/prod/scraper/ccass/'
 
 def get_all_code(d):
     tagurl = "https://www.hkexnews.hk/sdw/search/stocklist.aspx?sortby=stockcode&shareholdingdate={}".format(d)
@@ -117,7 +117,8 @@ def main():
     for cl in col_name:
         total_data[cl] = []
     codelist = get_all_code(d)
-    codelist = codelist[-500:]
+    print(codelist)
+    #codelist = codelist[-500:]
     threads = []
     for i in range(40):
         t = threading.Thread(target=child_thread,args=(input_time,total_data,codelist))

@@ -5,7 +5,7 @@ import datetime
 import sys
 root_path = '/root/'
 _root_path = '/Users/apple/Documents/trading/'
-sys.path.append(root_path, 'scripts/')
+sys.path.append(root_path + 'scripts/')
 from utils import *
 from jqdatasdk import *
 auth('13918125129','fmttm1993')
