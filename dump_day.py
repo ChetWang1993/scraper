@@ -1,13 +1,15 @@
 #!/usr/bin/python3
 #/usr/local/bin/python3
-import sys
 import pandas as pd
+import sys
+root_path = '/root/'
+_root_path = '/Users/apple/Documents/trading/stock/'
+sys.path.append(root_path + 'scripts/')
 from jqdatasdk import *
 auth('13918125129','fmttm1993')
-_data_path = '/root/data/prod/trading_days.txt'
-data_path = '/Users/apple/Documents/trading/alpha/data/trading_days.txt'
+from utils import *
+data_path = root_path, '/data/trading_days.txt'
 d = sys.argv[1]
-_d = '20200210'
 
 ret = get_trade_days(start_date = d, end_date = d)
 if len(ret) == 0:
