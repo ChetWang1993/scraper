@@ -3,14 +3,14 @@
 import pandas as pd
 import datetime
 import sys
-root_path = '/root/'
-_root_path = '/Users/apple/Documents/trading/'
+root_path = '/root/data/'
+_root_path = '/Users/apple/Documents/trading/stock/data/'
 sys.path.append(root_path + 'scripts/')
 from utils import *
 from jqdatasdk import *
 auth('13918125129','fmttm1993')
 idx = '000300.XSHG'
-erd_path = root_path + '/data/erd/'
+erd_path = root_path + '/erd/'
 d = sys.argv[1]
 
 stocks = get_index_stocks(idx, date = date_str(d))

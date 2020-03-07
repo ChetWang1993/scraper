@@ -3,13 +3,13 @@
 import pandas as pd
 import datetime
 import sys
-_root_path = '/root/'
-root_path = '/Users/apple/Documents/trading/'
+root_path = '/root/data/'
+_root_path = '/Users/apple/Documents/trading/stock/data/'
 sys.path.append(root_path + 'scripts/')
 from utils import *
-bar_path = root_path + '/stock/data/bar/'
+bar_path = root_path + '/bar/'
 d = sys.argv[1]
-data_path = root_path + '/stock/data/trading_days.txt'
+data_path = root_path + '/trading_days.txt'
 trading_days = pd.read_csv(data_path, sep = '\t')
 if 0 == trading_days[trading_days['date'] == date_str(d)].size:
     print('{} is holiday'.format(d))
