@@ -11,7 +11,7 @@ from jqdatasdk import *
 auth('13918125129','fmttm1993')
 from utils import *
 idx = '000300.XSHG'
-compo_path = root_path, '/data/compo/'
+compo_path = root_path + '/data/compo/'
 d = sys.argv[1]
 
 stocks = get_index_stocks(idx, date = date_str(d))

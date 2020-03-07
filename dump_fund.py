@@ -14,12 +14,13 @@ fund_path = root_path + '/data/fund/'
 fund = pd.DataFrame()
 d = sys.argv[1]
 
-stocks = get_index_stocks(idx, date = d)
+stocks = get_index_stocks(idx, date = date_str(d))
 #dump fund
-f = get_fundamentals(query(valuation, income, indicator, finance.STK_BALANCE_SHEET).filter(valuation.code.in_(stocks)), date = d)
+f = get_fundamentals(query(valuation, income, indicator).filter(valuation.code.in_(stocks)), date = date_str(d))
 f['date'] = d
 f.fillna(0)
 f = f.rename(columns = {'code': 'ric'})
 f = f.drop_duplicates()
+f = f[['date', 'ric', 'circulating_market_cap', 'inc_revenue_year_on_year', 'turnover_ratio', 'roe', 'commission_income', 'total_operating_cost', 'operating_cost']]
 print(fund_path + '{}.txt'.format(d))
 f.to_csv(fund_path + '{}.txt'.format(d), sep='\t', index = False)
