@@ -80,8 +80,8 @@ def crawler(input_time = '2020/02/01',input_code = '00002',retry = 3):
                 rowdata.append(div.text.strip())
             returndata.append(rowdata)
         return returndata
-    except:
-        print("exception")
+    except Exception as e:
+        print(e)
         return crawler(input_time,input_code,retry-1)
 import threading
 
