@@ -3,14 +3,14 @@
 import pandas as pd
 import datetime
 import sys
-root_path = '/root/data/'
-_root_path = '/Users/apple/Documents/trading/stock/data/'
+import os
+root_path = os.path.dirname(os.path.realpath(__file__)) + '/../'
 sys.path.append(root_path + 'scripts/')
 from jqdatasdk import *
 auth('13918125129','fmttm1993')
 from utils import *
 idx = '000300.XSHG'
-fund_path = root_path + '/fund/'
+fund_path = root_path + 'data/fund/'
 fund = pd.DataFrame()
 d = sys.argv[1]
 
