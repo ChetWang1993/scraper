@@ -5,7 +5,9 @@ import time
 import pandas as pd
 from pandas import DataFrame
 import json
-data_path = '/root/data/prod/scraper/ccass/'
+import os
+root_path = os.path.dirname(os.path.realpath(__file__))
+data_path = root_path + '/../data/scraper/ccass/'
 
 def get_all_code(d):
     tagurl = "https://www.hkexnews.hk/sdw/search/stocklist.aspx?sortby=stockcode&shareholdingdate={}".format(d)
