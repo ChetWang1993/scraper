@@ -94,7 +94,7 @@ def child_thread(input_time,total_data,code_list):
                 code = code_list.pop()
         if code == None:
             return
-        print("正在爬取",code,"的股票信息")
+        #print("正在爬取",code,"的股票信息")
         data = crawler(input_time,code)
         with threading.Lock():
             for row in data:
@@ -120,7 +120,6 @@ def main():
         total_data[cl] = []
     codelist = get_all_code(d)
     print(codelist)
-    #codelist = codelist[-500:]
     threads = []
     for i in range(40):
         t = threading.Thread(target=child_thread,args=(input_time,total_data,codelist))
