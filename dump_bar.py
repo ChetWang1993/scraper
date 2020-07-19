@@ -1,5 +1,4 @@
-#!/usr/bin/python3
-#/usr/local/bin/python3
+#!/usr/local/bin/python3
 import pandas as pd
 import datetime
 import sys
@@ -9,17 +8,13 @@ sys.path.append(root_path + 'scripts/')
 from utils import *
 bar_path = root_path + 'data/bar/'
 d = sys.argv[1]
-data_path = root_path + 'data/trading_days.txt'
-trading_days = pd.read_csv(data_path, sep = '\t')
-if 0 == trading_days[trading_days['date'] == date_str(d)].size:
+
+if not is_bday(d):
     print('{} is holiday'.format(d))
     quit()
-from jqdatasdk import *
-auth('13918125129','fmttm1993')
-idx = '000300.XSHG'
-stocks = get_index_stocks(idx, date = date_str(d))
+stocks = get_universe(date_str(d))
 e = get_bars(stocks, 48, unit='5m',fields=['date','open','high','low','close','volume','money'], include_now = False,
-    end_dt = next_bday_from_str(d).strftime('%Y-%m-%d'), df = True)
+    end_dt = next_bday_from_str(d).strftime('%Y-%m-%d'), df = True, fq_ref_date = date.today())
 if 0 == e.size:
     quit()
 if e['date'][0].date() != datetime.strptime(d, '%Y%m%d').date():
