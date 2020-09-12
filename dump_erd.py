@@ -10,9 +10,12 @@ from utils import *
 erd_path = root_path + 'data/erd/'
 d = sys.argv[1]
 
+if not is_bday(d):
+    print('{} is holiday'.format(d))
+    quit()
 stocks = get_universe(date_str(d))
 e = get_bars(stocks, 1, unit='1d',fields=['date','open','high','low','close','volume','money'], include_now = False,
-    end_dt = next_bday_from_str(d).strftime('%Y-%m-%d'), df = True)
+    end_dt = next_bday_from_str(d).strftime('%Y-%m-%d'), df = True, fq_ref_date = date.today())
 if 0 == e.size:
     quit()
 if e['date'][0] != datetime.strptime(d, '%Y%m%d').date():

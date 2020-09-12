@@ -1,25 +1,30 @@
 #!/usr/bin/python3
 #/usr/local/bin/python3
 import pandas as pd
-import datetime
 import sys
 import os
 root_path = os.path.dirname(os.path.realpath(__file__)) + '/../'
 sys.path.append(root_path + 'scripts/')
 from utils import *
-from jqdatasdk import *
-auth('13918125129','fmttm1993')
-from utils import *
-idx = '000300.XSHG'
-compo_path = root_path + 'data/compo/'
+if len(sys.argv) < 2:
+    print("usage: ./dump_compo.py date index")
+    quit()
 d = sys.argv[1]
+idx = sys.argv[2]
+# csi300: 000030.XSHG csi500: 000905.XSHG
+compo_mapping = {'csi300': '000030.XSHG', 'csi500': '000905.XSHG'}
+compo_path = root_path + 'data/compo/' + idx + '/'
 
-stocks = get_index_stocks(idx, date = date_str(d))
-w = get_index_weights(idx, date = date_str(d))
-w = w.reset_index()
-w['weight'] = w['weight'] / 100
-w = w.drop(columns = ['display_name', 'date'])
-w = w.rename(columns={'code': 'ric'})
-w = w.drop_duplicates()
+if not is_bday(d):
+    print('{} is holiday'.format(d))
+    quit()
+stocks = get_index_stocks(compo_mapping[idx], date = date_str(d))
+t = get_index_weights(compo_mapping[idx], date = date_str(d))
+t = t.reset_index()
+t['weight'] = t['weight'] / 100
+t = t.drop(columns = ['display_name', 'date'])
+t = t.rename(columns={'code': 'ric'})
+t = t.drop_duplicates()
+t = t[['ric', 'weight']]
 print(compo_path + '{}.txt'.format(d))
-w.to_csv(compo_path + '{}.txt'.format(d), sep='\t', index = False)
+t.to_csv(compo_path + '{}.txt'.format(d), sep='\t', index = False)
