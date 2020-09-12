@@ -1,4 +1,5 @@
-#!/usr/local/bin/python3
+#!/usr/bin/python3
+#/usr/local/bin/python3
 import pandas as pd
 import datetime
 import sys
