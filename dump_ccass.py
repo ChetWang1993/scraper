@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+#/usr/local/bin/python3
 import requests
 from bs4 import BeautifulSoup
 import time
@@ -121,7 +122,7 @@ def main():
     codelist = get_all_code(d)
     print(codelist)
     threads = []
-    for i in range(40):
+    for i in range(1):
         t = threading.Thread(target=child_thread,args=(input_time,total_data,codelist))
         t.start()
         threads.append(t)
