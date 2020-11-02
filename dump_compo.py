@@ -12,7 +12,7 @@ if len(sys.argv) < 2:
 d = sys.argv[1]
 idx = sys.argv[2]
 # csi300: 000030.XSHG csi500: 000905.XSHG
-compo_mapping = {'csi300': '000030.XSHG', 'csi500': '000905.XSHG'}
+compo_mapping = {'csi300': '000300.XSHG', 'csi500': '000905.XSHG'}
 compo_path = root_path + 'data/compo/' + idx + '/'
 
 if not is_bday(d):
