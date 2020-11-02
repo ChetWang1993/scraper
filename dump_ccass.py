@@ -7,6 +7,7 @@ import pandas as pd
 from pandas import DataFrame
 import json
 import os
+import time
 root_path = os.path.dirname(os.path.realpath(__file__))
 data_path = root_path + '/../data/scraper/ccass/'
 
@@ -66,12 +67,13 @@ def crawler(input_time = '2020/02/01',input_code = '00002',retry = 3):
         }
         response = requests.post('https://www.hkexnews.hk/sdw/search/searchsdw.aspx', headers=headers, data=data)
         if response.status_code!=200:
-            print("中途出错")
+            print("中途出错 {}".format(response.status_code))
             return []
         soup = BeautifulSoup(response.text,"lxml")
         tr_list = soup.find_all("tr")
         tr_list = tr_list[1:]
         returndata = []
+        print(tr_list)
         for tr in tr_list:
             classlist = ["col-participant-id","col-participant-name","col-address","col-shareholding text-right","col-shareholding-percent text-right"]
             rowdata = []
@@ -106,6 +108,7 @@ def child_thread(input_time,total_data,code_list):
                 total_data["Address"].append(row[2])
                 total_data["ShareHolding"].append(row[3])
                 total_data[r"占已发行股份/认股权证/单位总数的百分比"].append(row[4])
+    time.sleep(1)
 
 def main():
     import sys
@@ -120,7 +123,7 @@ def main():
     for cl in col_name:
         total_data[cl] = []
     codelist = get_all_code(d)
-    print(codelist)
+    print(len(codelist))
     threads = []
     for i in range(1):
         t = threading.Thread(target=child_thread,args=(input_time,total_data,codelist))
